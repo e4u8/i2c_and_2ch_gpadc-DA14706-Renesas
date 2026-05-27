@@ -65,6 +65,7 @@
 
 #define dg_configUSE_HW_GPADC                   (1)
 #define dg_configGPADC_ADAPTER                  (1)
+//#define CONFIG_GPADC_USE_ASYNC_TRANSACTIONS     (0)
 
 #define dg_configI2C_ADAPTER                    (1)
 #define dg_configUSE_HW_I2C                     (1)
