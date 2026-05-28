@@ -15,10 +15,10 @@ This project merges two standalone examples:
 
 Two FreeRTOS tasks run concurrently:
 
-- **`gpadc_app_task`** — opens Ch0 and Ch1 sequentially at full speed, converts raw ADC counts to millivolts (with optional two-point calibration), then prints a combined output line.
+- **`gpadc_app_task`** — opens Ch0 and Ch1 sequentially, converts raw ADC counts to millivolts (with optional two-point calibration), then prints a combined output line.
 - **`aht20_task`** — reads temperature and humidity from the AHT20 sensor every 2 seconds and stores the latest values in shared `volatile` variables (`g_last_temp_c`, `g_last_hum_percent`).
 
-The GPADC task snapshots these shared variables on each iteration so every output line includes the most recent environmental reading without requiring synchronisation primitives (a single aligned `float` read on Cortex-M33 is atomic on the bus).
+The GPADC task snapshots these shared variables on each iteration so every output line includes the most recent environmental reading without requiring synchronisation primitives.
 
 ---
 
