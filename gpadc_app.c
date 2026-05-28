@@ -29,6 +29,11 @@ extern volatile float g_last_temp_c;
 extern volatile uint8_t g_last_hum_percent;
 
 /* -----------------------------------------------------------------------
+ * Rate measurement
+ * ----------------------------------------------------------------------- */
+#define GPADC_MEASURE_RATE   1
+
+/* -----------------------------------------------------------------------
  * Channel aliases
  * ----------------------------------------------------------------------- */
 #define CHAN0_DEVICE   ADC_CH0_DEVICE
@@ -98,6 +103,12 @@ void gpadc_app_task(void *pvParameters)
                 ad_gpadc_close(h_warm, false);
         }
 
+        #if GPADC_MEASURE_RATE
+                uint32_t pair_count   = 0;
+                uint32_t tick_start   = OS_GET_TICK_COUNT();
+                uint32_t ticks_per_sec = OS_GET_TICK_FREQ();   /* FreeRTOS configTICK_RATE_HZ */
+        #endif
+        
         for (;;) {
 
                 /* ---- CH0: Open → Read → Close ---- */
@@ -160,5 +171,18 @@ void gpadc_app_task(void *pvParameters)
                     (int)mv1,
                     (int)(temp_c * 10),   // e.g. 23.45°C → 234
                     (int)humidity);
+
+                #if GPADC_MEASURE_RATE
+                        pair_count++;
+                        uint32_t now     = OS_GET_TICK_COUNT();
+                        uint32_t elapsed = (now >= tick_start)
+                            ? (now - tick_start)
+                            : (0xFFFFFFFFU - tick_start + now + 1U);
+                        if (elapsed >= ticks_per_sec) {
+                                printf("[RATE] %"PRIu32" sample-pairs/s\r\n", pair_count);
+                                pair_count = 0;
+                                tick_start = now;
+                        }
+                #endif
         }
 }
