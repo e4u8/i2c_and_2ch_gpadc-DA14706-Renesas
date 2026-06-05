@@ -3,7 +3,7 @@
  *
  * @file peripheral_setup.h
  *
- * @brief Pin definitions for I2C (AHT20) — MikroBUS #2
+ * @brief Pin definitions for I2C (AHT20) ï¿½ MikroBUS #2
  *        Copied from the AHT20-i2c_sensor project into the combined project.
  *        ADC pin definitions live directly in platform_devices.c.
  *
@@ -24,7 +24,7 @@
 #define MIKRO_BUS 2
 #endif
 
-/* I2C pin assignment — MikroBUS #2 */
+/* I2C pin assignment ï¿½ MikroBUS #2 */
 #define I2C_MASTER_SCL_PORT     ( HW_GPIO_PORT_1 )
 #define I2C_MASTER_SCL_PIN      ( HW_GPIO_PIN_12 )
 

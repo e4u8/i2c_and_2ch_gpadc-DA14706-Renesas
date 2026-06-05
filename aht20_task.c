@@ -30,7 +30,7 @@
  * bus, so no mutex is needed for this single-producer / single-consumer
  * pattern.
  *
- * Initial value 0.0f — gpadc_app_task will print 0.00 C until the first
+ * Initial value 0.0f ï¿½ gpadc_app_task will print 0.00 C until the first
  * AHT20 reading arrives (~2 s after boot).
  * ----------------------------------------------------------------------- */
 volatile float g_last_temp_c = 0.0f;
@@ -41,7 +41,7 @@ volatile uint8_t g_last_hum_percent = 0;
  * ----------------------------------------------------------------------- */
 #define AHT20_TASK_NAME        "aht20"
 #define AHT20_TASK_STACK_SIZE  (configMINIMAL_STACK_SIZE + 512)
-#define AHT20_TASK_PRIORITY    (tskIDLE_PRIORITY + 1)
+#define AHT20_TASK_PRIORITY    (tskIDLE_PRIORITY + 1)   // (OS_TASK_PRIORITY_NORMAL)
 
 #define AHT20_SAMPLE_PERIOD_MS  2000
 
@@ -67,7 +67,7 @@ static void aht20_task(void *pvParameters)
         DRIVER_AHT20_LINK_DELAY_MS(&aht20_handle,       aht20_interface_delay_ms);
         DRIVER_AHT20_LINK_DEBUG_PRINT(&aht20_handle,    aht20_interface_debug_print);
 
-        /* Initialise sensor — retry indefinitely on failure */
+        /* Initialise sensor ï¿½ retry indefinitely on failure */
         res = aht20_init(&aht20_handle);
         if (res != 0) {
                 aht20_interface_debug_print("AHT20 init failed: %d\r\n", res);
@@ -108,7 +108,7 @@ static void aht20_task(void *pvParameters)
 }
 
 /* -----------------------------------------------------------------------
- * aht20_task_start — call once from system_init in main.c
+ * aht20_task_start ï¿½ call once from system_init in main.c
  * ----------------------------------------------------------------------- */
 void aht20_task_start(void)
 {

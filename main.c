@@ -4,7 +4,7 @@
  * @file main.c
  *
  * @brief Combined GPADC (2-channel) + AHT20 Temperature/Humidity Application
- *        DA14706 Renesas — FreeRTOS / SYSCPU context
+ *        DA14706 Renesas ï¿½ FreeRTOS / SYSCPU context
  *
  * Template base: GPADC-2channels project.
  * Added:         AHT20 I2C task (from AHT20-i2c_sensor project).
@@ -32,7 +32,7 @@
 /* GPADC adapter */
 #include "ad_gpadc.h"
 
-/* I2C adapter  — needed for AHT20 */
+/* I2C adapter  ï¿½ needed for AHT20 */
 #include "ad_i2c.h"
 
 #include "platform_devices.h"   /* merged: ADC_CH0_DEVICE, ADC_CH1_DEVICE, I2C_DEVICE_MASTER */
@@ -83,7 +83,7 @@ static void system_init(void *pvParameters)
         retarget_init();
 #endif
 
-        /* Sleep mode — keep idle so both tasks can run freely */
+        /* Sleep mode ï¿½ keep idle so both tasks can run freely */
         pm_sleep_mode_set(pm_mode_idle);
         pm_set_sys_wakeup_mode(pm_sys_wakeup_mode_fast);
 
@@ -97,7 +97,7 @@ static void system_init(void *pvParameters)
         OS_ASSERT(status == OS_TASK_CREATE_SUCCESS);
 
         /* ---- Create AHT20 task ---- */
-        aht20_task_start();   /* defined in aht20_task.c — creates its own FreeRTOS task */
+        aht20_task_start();   /* defined in aht20_task.c ï¿½ creates its own FreeRTOS task */
 
         /* SysInit work is done */
         OS_TASK_DELETE(xHandle);
@@ -124,7 +124,7 @@ int main(void)
 }
 
 /* -----------------------------------------------------------------------
- * periph_init — called by pm_system_init(), configures ADC GPIO pins.
+ * periph_init ï¿½ called by pm_system_init(), configures ADC GPIO pins.
  * I2C pins are managed by the adapter (ad_i2c_io_config in prvSetupHardware).
  * ----------------------------------------------------------------------- */
 static void periph_init(void)
@@ -138,7 +138,7 @@ static void periph_init(void)
 }
 
 /* -----------------------------------------------------------------------
- * prvSetupHardware — hardware initialisation for GPADC + I2C
+ * prvSetupHardware ï¿½ hardware initialisation for GPADC + I2C
  * ----------------------------------------------------------------------- */
 static void prvSetupHardware(void)
 {

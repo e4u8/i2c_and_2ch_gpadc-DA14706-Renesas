@@ -3,7 +3,7 @@
  *
  * @file platform_devices.h
  *
- * @brief Merged platform devices header — GPADC + I2C
+ * @brief Merged platform devices header ï¿½ GPADC + I2C
  *
  ****************************************************************************************
  */
@@ -19,7 +19,7 @@ typedef __CONST void* PERIPHERAL_DEVICE;
 
 /* GPADC channel device handles */
 
-/* GPADC device type — always expose so main.c can see ->id and ->io */
+/* GPADC device type ï¿½ always expose so main.c can see ->id and ->io */
 #include "ad_gpadc.h"
 typedef __CONST ad_gpadc_controller_conf_t* gpadc_device;
 
