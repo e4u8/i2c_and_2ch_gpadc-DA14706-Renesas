@@ -65,6 +65,8 @@
 
 #define dg_configUSE_HW_GPADC                   (1)
 #define dg_configGPADC_ADAPTER                  (1)
+#define dg_configGPADC_DMA_SUPPORT              (1)
+#define dg_configUSE_HW_DMA                     (1)
 
 #define dg_configI2C_ADAPTER                    (1)
 #define dg_configUSE_HW_I2C                     (1)

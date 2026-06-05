@@ -3,7 +3,7 @@
  *
  * @file platform_devices.c
  *
- * @brief Merged platform devices — GPADC (Ch0, Ch1) + I2C master (AHT20)
+ * @brief Merged platform devices ï¿½ GPADC (Ch0, Ch1) + I2C master (AHT20)
  *
  * Combines:
  *   - GPADC-2channels project: ADC_CH0_DEVICE, ADC_CH1_DEVICE
@@ -15,13 +15,14 @@
  */
 
 #include "hw_gpio.h"
+#include "hw_dma.h"
 #include "ad_gpadc.h"
 #include "ad_i2c.h"
 #include "platform_devices.h"
 #include "peripheral_setup.h"   /* I2C pin definitions + I2C_SLAVE_ADDRESS */
 
 /* =======================================================================
- * GPADC — two single-ended channels
+ * GPADC ï¿½ two single-ended channels
  * ======================================================================= */
 #if dg_configGPADC_ADAPTER || dg_configUSE_HW_GPADC
 
@@ -54,20 +55,32 @@ const ad_gpadc_io_conf_t io_conf_ch1 = {
         .voltage_level = HW_GPIO_POWER_VDD1V8P,
 };
 
+/* DMA config â€” shared by both channels (GPADC is a single hardware resource;
+ * ch0 and ch1 are never active simultaneously so sharing is correct).
+ * channel must be EVEN (hardware constraint on the GPADC trigger mux). */
+#if HW_GPADC_DMA_SUPPORT
+static gpadc_dma_cfg dma_cfg_adc = {
+        .channel         = HW_DMA_CHANNEL_0,
+        .prio            = HW_DMA_PRIO_2,
+        .circular        = false,
+        .irq_nr_of_trans = 0,
+};
+#endif
+
 /* Driver configurations */
 const ad_gpadc_driver_conf_t drv_conf_ch0 = {
         .input_mode       = HW_GPADC_INPUT_MODE_SINGLE_ENDED,
         .positive         = HW_GPADC_INP_P0_5,
         .temp_sensor      = HW_GPADC_NO_TEMP_SENSOR,
         .sample_time      = 4,
-        .continuous       = false,
+        .continuous       = true,
         .interval         = 0,
         .input_attenuator = HW_GPADC_INPUT_VOLTAGE_UP_TO_3V6,
         .chopping         = true,
         .oversampling     = HW_GPADC_OVERSAMPLING_4_SAMPLES,
         .result_mode      = HW_GPADC_RESULT_NORMAL,
 #if HW_GPADC_DMA_SUPPORT
-        .dma_setup        = NULL,
+        .dma_setup        = &dma_cfg_adc,
 #endif
 };
 
@@ -76,14 +89,14 @@ const ad_gpadc_driver_conf_t drv_conf_ch1 = {
         .positive         = HW_GPADC_INP_P0_6,
         .temp_sensor      = HW_GPADC_NO_TEMP_SENSOR,
         .sample_time      = 4,
-        .continuous       = false,
+        .continuous       = true,
         .interval         = 0,
         .input_attenuator = HW_GPADC_INPUT_VOLTAGE_UP_TO_3V6,
         .chopping         = true,
         .oversampling     = HW_GPADC_OVERSAMPLING_4_SAMPLES,
         .result_mode      = HW_GPADC_RESULT_NORMAL,
 #if HW_GPADC_DMA_SUPPORT
-        .dma_setup        = NULL,
+        .dma_setup        = &dma_cfg_adc,
 #endif
 };
 
@@ -107,7 +120,7 @@ gpadc_device ADC_CH1_DEVICE = &conf_ch1;
 
 
 /* =======================================================================
- * I2C — master, for AHT20 sensor on MikroBUS #2 (P1_11 SDA, P1_12 SCL)
+ * I2C ï¿½ master, for AHT20 sensor on MikroBUS #2 (P1_11 SDA, P1_12 SCL)
  * ======================================================================= */
 #if (dg_configI2C_ADAPTER && dg_configUSE_HW_I2C)
 
@@ -132,7 +145,7 @@ static __CONST ad_i2c_driver_conf_t drv_i2c_master = {
                 .speed     = HW_I2C_SPEED_STANDARD,
                 .mode      = HW_I2C_MODE_MASTER,
                 .addr_mode = HW_I2C_ADDRESSING_7B,
-                .address   = I2C_SLAVE_ADDRESS,   /* 0x38 — AHT20 */
+                .address   = I2C_SLAVE_ADDRESS,   /* 0x38 ï¿½ AHT20 */
         },
 #if (MAIN_PROCESSOR_BUILD)
         .dma_channel = HW_DMA_CHANNEL_INVALID,
